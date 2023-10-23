@@ -9,13 +9,12 @@ from tqdm import tqdm
 load_dotenv()
 GOOGLE_MAPS_API_KEY = os.getenv('GOOGLE_MAPS_API_KEY')
 
-# cities in USA with > 20k population
-high_pop_cities = []
-
-### EACH RUN OF THIS SCRIPT WILL USE ~3500 ###
+### EACH RUN OF THIS SCRIPT WILL USE ~2250 API REQUESTS COSTING ~$16 USD ###
 
 with open('uscities.csv', 'r') as csvfile:
     reader = csv.DictReader(csvfile)
+    high_pop_cities = []
+
     for row in tqdm(reader):
         if int(row["population"]) > 20000:
             high_pop_cities.append({
