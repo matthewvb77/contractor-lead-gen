@@ -36,7 +36,9 @@ with open('uscities.csv', 'r') as csvfile:
                 "zips": str(row["zips"])
             })
 
-print(len(high_pop_cities))
+print("num high pop cities: ", len(high_pop_cities))
+
+print("first 50 cities: ", [city["city"] for city in high_pop_cities[:50]])
 
 # for city in cities:
 #     # Construct the URL for the Street View API
