@@ -1,21 +1,41 @@
 import requests
 import pandas as pd
+import os
+from dotenv import load_dotenv
+import csv
 
-# Your Google API Key
-API_KEY = 'YOUR_GOOGLE_API_KEY'
+load_dotenv()
+GOOGLE_MAPS_API_KEY = os.getenv('GOOGLE_MAPS_API_KEY')
 
-# Sample cities with coordinates (You'd replace this with your actual list)
-cities = [
-    {"name": "City1", "lat": 34.0522, "lng": -118.2437},
-    {"name": "City2", "lat": 40.7306, "lng": -73.9352},
-    # ... more cities ...
-]
+cities = []
+
+with open('uscities.csv', 'r') as csvfile:
+    reader = csv.DictReader(csvfile)
+    for row in reader:
+        cities.append({
+            "city": str(row["city"]),
+            "city_ascii": str(row["city_ascii"]),
+            "state_id": str(row["state_id"]),
+            "state_name": str(row["state_name"]),
+            "county_fips": str(row["county_fips"]),
+            "county_name": str(row["county_name"]),
+            "lat": float(row["lat"]),
+            "lng": float(row["lng"]),
+            "population": int(row["population"]),
+            "density": float(row["density"]),
+            "source": str(row["source"]),
+            "military": str(row["military"]),
+            "incorporated": str(row["incorporated"]),
+            "timezone": str(row["timezone"]),
+            "ranking": int(row["ranking"]),
+            "zips": str(row["zips"])
+        })
 
 results = []
 
 for city in cities:
     # Construct the URL for the Street View API
-    url = f"https://maps.googleapis.com/maps/api/streetview?size=600x300&location={city['lat']},{city['lng']}&key={API_KEY}"
+    url = f"https://maps.googleapis.com/maps/api/streetview?size=600x300&location={city['lat']},{city['lng']}&key={GOOGLE_MAPS_API_KEY}"
 
     response = requests.get(url, stream=True)
     if response.status_code == 200:
