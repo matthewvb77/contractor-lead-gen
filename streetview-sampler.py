@@ -11,7 +11,7 @@ GOOGLE_MAPS_API_KEY = os.getenv('GOOGLE_MAPS_API_KEY')
 
 ### EACH RUN OF THIS SCRIPT WILL USE ~2250 API REQUESTS COSTING ~$16 USD ###
 
-with open('uscities.csv', 'r') as csvfile:
+with open('north-america-cities.csv', 'r') as csvfile:
     reader = csv.DictReader(csvfile)
     high_pop_cities = []
 
@@ -20,20 +20,12 @@ with open('uscities.csv', 'r') as csvfile:
             high_pop_cities.append({
                 "city": str(row["city"]),
                 "city_ascii": str(row["city_ascii"]),
-                "state_id": str(row["state_id"]),
-                "state_name": str(row["state_name"]),
-                "county_fips": str(row["county_fips"]),
-                "county_name": str(row["county_name"]),
+                "region_id": str(row["region_id"]),
                 "lat": float(row["lat"]),
                 "lng": float(row["lng"]),
                 "population": int(row["population"]),
                 "density": float(row["density"]),
-                "source": str(row["source"]),
-                "military": str(row["military"]),
-                "incorporated": str(row["incorporated"]),
-                "timezone": str(row["timezone"]),
-                "ranking": int(row["ranking"]),
-                "zips": str(row["zips"])
+                "id": str(row["id"])
             })
 
 print("num high pop cities: ", len(high_pop_cities))
