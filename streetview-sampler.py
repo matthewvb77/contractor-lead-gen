@@ -16,14 +16,14 @@ results = []
 for city in cities:
     # Construct the URL for the Street View API
     url = f"https://maps.googleapis.com/maps/api/streetview?size=600x300&location={city['lat']},{city['lng']}&key={API_KEY}"
-    
+
     response = requests.get(url, stream=True)
     if response.status_code == 200:
         # Save image to local storage (optional)
-        with open(f"{city['name']}.jpg", 'wb') as f:
-            for chunk in response:
-                f.write(chunk)
-        
+        # with open(f"{city['name']}.jpg", 'wb') as f:
+        #     for chunk in response:
+        #         f.write(chunk)
+
         # Append to results
         results.append({"City": city['name'], "ImageURL": url})
 
