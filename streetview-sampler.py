@@ -18,7 +18,6 @@ with open('north-america-cities.csv', 'r') as csvfile:
     for row in tqdm(reader):
         if int(row["population"]) > 20000:
             high_pop_cities.append({
-                "city": str(row["city"]),
                 "city_ascii": str(row["city_ascii"]),
                 "region_id": str(row["region_id"]),
                 "lat": float(row["lat"]),
@@ -30,7 +29,8 @@ with open('north-america-cities.csv', 'r') as csvfile:
 
 print("num high pop cities: ", len(high_pop_cities))
 
-print("first 50 cities: ", [city["city"] for city in high_pop_cities[:50]])
+# print("first 50 cities: ", [city["city_ascii"]
+#       for city in high_pop_cities[:50]])
 
 # for city in cities:
 #     # Construct the URL for the Street View API
