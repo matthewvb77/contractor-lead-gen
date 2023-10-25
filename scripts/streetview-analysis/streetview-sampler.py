@@ -33,43 +33,48 @@ with open('north-america-cities.csv', 'r') as csvfile:
                 "id": str(row["id"])
             })
 
-# print("num high pop cities: ", len(high_pop_cities))
-
-# print("first 50 cities: ", [city["city_ascii"]
-#       for city in high_pop_cities[:50]])
 
 # TEST --- DELETE LATER
 high_pop_cities = high_pop_cities[:1]
 # print("high_pop_cities: ", high_pop_cities)
 
+# Searches for streetview metadata for image within 100 meters on all sides
+
+
+def streetview_fuzzy_search(lat, lng):
+    # location must be within 50 meters of streetview image
+    DEGREE_IN_METERS = 111139
+    diff = 50/DEGREE_IN_METERS
+    locations = [(lat-diff, lng+diff), (lat, lng+diff), (lat+diff, lng+diff),
+                 (lat-diff, lng), (lat, lng), (lat+diff, lng),
+                 (lat-diff, lng-diff), (lat, lng-diff), (lat+diff, lng-diff)]
+
+    for location in locations:
+        unsigned_url = f"https://maps.googleapis.com/maps/api/streetview/metadata?location={location[0]},{location[1]}&key={GOOGLE_MAPS_API_KEY}"
+        signed_url = sign_url(unsigned_url, URL_SIGNING_SECRET)
+
+        response = requests.get(signed_url, stream=True)
+        if response.status == "OK":
+            return {"city": city['city_ascii'],
+                    "date": response.date,
+                    "lat": response.location.lat,
+                    "lng": response.location.lng,
+                    "status": "OK"}
+        elif response.status == "ZERO_RESULTS":
+            continue
+        else:
+            raise Exception("Error: ", response.status)
+
+    return {"city": city['city_ascii'],
+            "date": None,
+            "lat": None,
+            "lng": None,
+            "status": "NOT_FOUND"}
+
+
 results = []
 for city in high_pop_cities:
-
-    unsigned_url = f"https://maps.googleapis.com/maps/api/streetview/metadata?location={city['lat']},{city['lng']}&key={GOOGLE_MAPS_API_KEY}"
-    signed_url = sign_url(unsigned_url, URL_SIGNING_SECRET)
-#     -------------- EXAMPLE RESPONSE ----------------
-#     {
-#    "copyright" : "© 2017 Google",
-#    "date" : "2016-05",
-#    "location" : {
-#       "lat" : 48.85783227207914,
-#       "lng" : 2.295226175151347
-#    },
-#    "pano_id" : "tu510ie_z4ptBZYo2BGEJg",
-#    "status" : "OK"
-#   }
-    response = requests.get(signed_url, stream=True)
-    print(response.text)
-
-    if response.status == "OK":
-        results.append({"city": city['city_ascii'],
-                        "date": response.date,
-                       "lat": response.location.lat,
-                        "lng": response.location.lng})
-
-    else:
-        raise Exception(
-            f"Error retrieving Street View metadata for: {city['city_ascii']}\nError response: {response}")
+    results.append(streetview_fuzzy_search(city['lat'], city['lng']))
 
 # Convert results to a DataFrame and save to Excel
 
