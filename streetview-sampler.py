@@ -16,6 +16,8 @@ MIN_DENSITY = 1000
 MIN_POPULATION = 20000
 
 ### EACH RUN OF THIS SCRIPT WILL USE ~2500 API REQUESTS COSTING ~$18 USD ###
+# Static streetview endpoint is $7 / 1000 requests
+# Image metadata endpoint is free
 
 with open('north-america-cities.csv', 'r') as csvfile:
     reader = csv.DictReader(csvfile)
