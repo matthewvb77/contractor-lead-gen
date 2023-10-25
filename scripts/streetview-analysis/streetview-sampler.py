@@ -39,12 +39,13 @@ with open('north-america-cities.csv', 'r') as csvfile:
 
 # TEST --- DELETE LATER
 high_pop_cities = high_pop_cities[:1]
-print("high_pop_cities: ", high_pop_cities)
+# print("high_pop_cities: ", high_pop_cities)
 
 results = []
 for city in high_pop_cities:
 
-    url = f"https://maps.googleapis.com/maps/api/streetview/metadata?location={city['lat']},{city['lng']}&key={GOOGLE_MAPS_API_KEY}&signature={URL_SIGNING_SECRET}"
+    base_url = "https://maps.googleapis.com"
+    path_and_query = f"/maps/api/streetview/metadata?location={city['lat']},{city['lng']}&key={GOOGLE_MAPS_API_KEY}"
 #     -------------- EXAMPLE RESPONSE ----------------
 #     {
 #    "copyright" : "© 2017 Google",
@@ -57,9 +58,13 @@ for city in high_pop_cities:
 #    "status" : "OK"
 #   }
     response = requests.get(url, stream=True)
+    print(response.text)
+
     if response.status == "OK":
-        results.append({"city": city['city_ascii'], "date": response.date,
-                       "lat": response.location.lat, "lng": response.location.lng})
+        results.append({"city": city['city_ascii'],
+                        "date": response.date,
+                       "lat": response.location.lat,
+                        "lng": response.location.lng})
 
     else:
         raise Exception(
