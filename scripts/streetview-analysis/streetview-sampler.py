@@ -32,11 +32,14 @@ with open('north-america-cities.csv', 'r') as csvfile:
                 "id": str(row["id"])
             })
 
-print("num high pop cities: ", len(high_pop_cities))
+# print("num high pop cities: ", len(high_pop_cities))
 
-print("first 50 cities: ", [city["city_ascii"]
-      for city in high_pop_cities[:50]])
+# print("first 50 cities: ", [city["city_ascii"]
+#       for city in high_pop_cities[:50]])
 
+# TEST --- DELETE LATER
+high_pop_cities = high_pop_cities[:1]
+print("high_pop_cities: ", high_pop_cities)
 
 results = []
 for city in high_pop_cities:
