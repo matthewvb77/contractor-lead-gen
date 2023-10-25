@@ -9,7 +9,7 @@ from tqdm import tqdm
 load_dotenv()
 GOOGLE_MAPS_API_KEY = os.getenv('GOOGLE_MAPS_API_KEY')
 
-### EACH RUN OF THIS SCRIPT WILL USE ~2250 API REQUESTS COSTING ~$16 USD ###
+### EACH RUN OF THIS SCRIPT WILL USE ~2500 API REQUESTS COSTING ~$18 USD ###
 
 with open('north-america-cities.csv', 'r') as csvfile:
     reader = csv.DictReader(csvfile)
