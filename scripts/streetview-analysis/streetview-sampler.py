@@ -45,7 +45,7 @@ results = []
 for city in high_pop_cities:
 
     url = f"https://maps.googleapis.com/maps/api/streetview/metadata?location={city['lat']},{city['lng']}&key={GOOGLE_MAPS_API_KEY}&signature={URL_SIGNING_SECRET}"
-#     EXAMPLE RESPONSE
+#     -------------- EXAMPLE RESPONSE ----------------
 #     {
 #    "copyright" : "© 2017 Google",
 #    "date" : "2016-05",
