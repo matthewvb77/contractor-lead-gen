@@ -37,20 +37,32 @@ print("num high pop cities: ", len(high_pop_cities))
 print("first 50 cities: ", [city["city_ascii"]
       for city in high_pop_cities[:50]])
 
+
 results = []
 for city in high_pop_cities:
-    # Construct the URL for the Street View API
-    url = f"https://maps.googleapis.com/maps/api/streetview/metadata?location={city['lat']},{city['lng']}&key={GOOGLE_MAPS_API_KEY}&signature={URL_SIGNING_SECRET}"
 
+    url = f"https://maps.googleapis.com/maps/api/streetview/metadata?location={city['lat']},{city['lng']}&key={GOOGLE_MAPS_API_KEY}&signature={URL_SIGNING_SECRET}"
+#     EXAMPLE RESPONSE
+#     {
+#    "copyright" : "© 2017 Google",
+#    "date" : "2016-05",
+#    "location" : {
+#       "lat" : 48.85783227207914,
+#       "lng" : 2.295226175151347
+#    },
+#    "pano_id" : "tu510ie_z4ptBZYo2BGEJg",
+#    "status" : "OK"
+#   }
     response = requests.get(url, stream=True)
-    if response.status_code == 200:
-        # Append to results
-        results.append({"City": city['name'], "ImageURL": url})
+    if response.status == "OK":
+        results.append({"city": city['city_ascii'], "date": response.date,
+                       "lat": response.location.lat, "lng": response.location.lng})
 
     else:
         raise Exception(
-            f"Error retrieving Street View metadata for: {city['city_ascii']}")
+            f"Error retrieving Street View metadata for: {city['city_ascii']}\nError response: {response}")
 
 # Convert results to a DataFrame and save to Excel
+
 df = pd.DataFrame(results)
 df.to_excel('cities_streetview.xlsx', index=False)
