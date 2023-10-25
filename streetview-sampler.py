@@ -15,9 +15,6 @@ MAX_DENSITY = 5500
 MIN_DENSITY = 1000
 MIN_POPULATION = 20000
 
-### EACH RUN OF THIS SCRIPT WILL USE ~2500 API REQUESTS COSTING ~$18 USD ###
-# Static streetview endpoint is $7 / 1000 requests
-# Image metadata endpoint is free
 
 with open('north-america-cities.csv', 'r') as csvfile:
     reader = csv.DictReader(csvfile)
@@ -37,24 +34,24 @@ with open('north-america-cities.csv', 'r') as csvfile:
 
 print("num high pop cities: ", len(high_pop_cities))
 
-# print("first 50 cities: ", [city["city_ascii"]
-#       for city in high_pop_cities[:50]])
+print("first 50 cities: ", [city["city_ascii"]
+      for city in high_pop_cities[:50]])
 
-# for city in cities:
-#     # Construct the URL for the Street View API
-#     url = f"https://maps.googleapis.com/maps/api/streetview?size=640x640&location=city["lat"],city["lng"]
-# &fov=80&heading=70&pitch=0&key=GOOGLE_MAPS_API_KEY"
+results = []
+for city in high_pop_cities:
+    # Construct the URL for the Street View API
+    url = f"https://maps.googleapis.com/maps/api/streetview/metadata?location={city['lat']},{city['lng']}&key={GOOGLE_MAPS_API_KEY}&signature="
 
-#     response = requests.get(url, stream=True)
-#     if response.status_code == 200:
-#         # Save image to local storage (optional)
-#         # with open(f"{city['name']}.jpg", 'wb') as f:
-#         #     for chunk in response:
-#         #         f.write(chunk)
+    response = requests.get(url, stream=True)
+    if response.status_code == 200:
+        # Save image to local storage (optional)
+        # with open(f"{city['name']}.jpg", 'wb') as f:
+        #     for chunk in response:
+        #         f.write(chunk)
 
-#         # Append to results
-#         results.append({"City": city['name'], "ImageURL": url})
+        # Append to results
+        results.append({"City": city['name'], "ImageURL": url})
 
-# # Convert results to a DataFrame and save to Excel
-# df = pd.DataFrame(results)
-# df.to_excel('cities_streetview.xlsx', index=False)
+# Convert results to a DataFrame and save to Excel
+df = pd.DataFrame(results)
+df.to_excel('cities_streetview.xlsx', index=False)
