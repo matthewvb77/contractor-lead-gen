@@ -4,6 +4,7 @@ import os
 from dotenv import load_dotenv
 import csv
 from tqdm import tqdm
+from sign_url import sign_url
 
 
 load_dotenv()
@@ -44,8 +45,8 @@ high_pop_cities = high_pop_cities[:1]
 results = []
 for city in high_pop_cities:
 
-    base_url = "https://maps.googleapis.com"
-    path_and_query = f"/maps/api/streetview/metadata?location={city['lat']},{city['lng']}&key={GOOGLE_MAPS_API_KEY}"
+    unsigned_url = f"https://maps.googleapis.com/maps/api/streetview/metadata?location={city['lat']},{city['lng']}&key={GOOGLE_MAPS_API_KEY}"
+    signed_url = sign_url(unsigned_url, URL_SIGNING_SECRET)
 #     -------------- EXAMPLE RESPONSE ----------------
 #     {
 #    "copyright" : "© 2017 Google",
@@ -57,7 +58,7 @@ for city in high_pop_cities:
 #    "pano_id" : "tu510ie_z4ptBZYo2BGEJg",
 #    "status" : "OK"
 #   }
-    response = requests.get(url, stream=True)
+    response = requests.get(signed_url, stream=True)
     print(response.text)
 
     if response.status == "OK":

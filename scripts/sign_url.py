@@ -1,7 +1,3 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-""" Signs a URL using a URL signing secret """
-
 import hashlib
 import hmac
 import base64
@@ -45,7 +41,7 @@ def sign_url(input_url=None, secret=None):
     return original_url + "&signature=" + encoded_signature.decode()
 
 
-if __name__ == "__main__":
-    input_url = input("URL to Sign: ")
-    secret = input("URL signing secret: ")
-    print("Signed URL: " + sign_url(input_url, secret))
+# if __name__ == "__main__":
+#     input_url = input("URL to Sign: ")
+#     secret = input("URL signing secret: ")
+#     print("Signed URL: " + sign_url(input_url, secret))
