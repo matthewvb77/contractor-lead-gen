@@ -6,7 +6,6 @@ import csv
 from tqdm import tqdm
 from sign_url import sign_url
 
-
 load_dotenv()
 GOOGLE_MAPS_API_KEY = os.getenv('GOOGLE_MAPS_API_KEY')
 URL_SIGNING_SECRET = os.getenv('URL_SIGNING_SECRET')
@@ -36,7 +35,6 @@ with open('north-america-cities.csv', 'r') as csvfile:
 
 # TEST --- DELETE LATER
 high_pop_cities = high_pop_cities[:1]
-# print("high_pop_cities: ", high_pop_cities)
 
 # Searches for streetview metadata for image within 100 meters on all sides
 
@@ -53,17 +51,18 @@ def streetview_fuzzy_search(lat, lng):
         unsigned_url = f"https://maps.googleapis.com/maps/api/streetview/metadata?location={location[0]},{location[1]}&key={GOOGLE_MAPS_API_KEY}"
         signed_url = sign_url(unsigned_url, URL_SIGNING_SECRET)
 
-        response = requests.get(signed_url, stream=True)
-        if response.status == "OK":
+        response = requests.get(signed_url, stream=True).json()
+        print("response: ", response)
+        if response["status"] == "OK":
             return {"city": city['city_ascii'],
-                    "date": response.date,
-                    "lat": response.location.lat,
-                    "lng": response.location.lng,
+                    "date": response["date"],
+                    "lat": response["location"]["lat"],
+                    "lng": response["location"]["lng"],
                     "status": "OK"}
-        elif response.status == "ZERO_RESULTS":
+        elif response["status"] == "ZERO_RESULTS":
             continue
         else:
-            raise Exception("Error: ", response.status)
+            raise Exception("Error: ", response["status"])
 
     return {"city": city['city_ascii'],
             "date": None,
