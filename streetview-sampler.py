@@ -34,7 +34,8 @@ print("num high pop cities: ", len(high_pop_cities))
 
 # for city in cities:
 #     # Construct the URL for the Street View API
-#     url = f"https://maps.googleapis.com/maps/api/streetview?size=600x300&location={city['lat']},{city['lng']}&key={GOOGLE_MAPS_API_KEY}"
+#     url = f"https://maps.googleapis.com/maps/api/streetview?size=640x640&location=city["lat"],city["lng"]
+# &fov=80&heading=70&pitch=0&key=GOOGLE_MAPS_API_KEY"
 
 #     response = requests.get(url, stream=True)
 #     if response.status_code == 200:
