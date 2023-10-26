@@ -39,7 +39,7 @@ with open('north-america-cities.csv', 'r') as csvfile:
 # Searches for streetview metadata for image within 100 meters on all sides
 
 
-def streetview_fuzzy_search(lat, lng):
+def streetview_fuzzy_search(city_name, lat, lng):
     # location must be within 50 meters of streetview image
     DEGREE_IN_METERS = 111139
     diff = 50/DEGREE_IN_METERS
@@ -54,7 +54,7 @@ def streetview_fuzzy_search(lat, lng):
         response = requests.get(signed_url, stream=True).json()
         # print("response: ", response)
         if response["status"] == "OK":
-            return {"city": city['city_ascii'],
+            return {"city": city_name,
                     "date": response["date"],
                     "lat": response["location"]["lat"],
                     "lng": response["location"]["lng"],
@@ -64,7 +64,7 @@ def streetview_fuzzy_search(lat, lng):
         else:
             raise Exception("Error: ", response["status"])
 
-    return {"city": city['city_ascii'],
+    return {"city": city_name,
             "date": None,
             "lat": None,
             "lng": None,
@@ -73,7 +73,8 @@ def streetview_fuzzy_search(lat, lng):
 
 results = []
 for city in tqdm(high_pop_cities):
-    results.append(streetview_fuzzy_search(city['lat'], city['lng']))
+    results.append(streetview_fuzzy_search(
+        city['city_ascii'], city['lat'], city['lng']))
 
 # Convert results to a DataFrame and save to Excel
 
