@@ -23,7 +23,7 @@ with open('north-america-cities.csv', 'r') as csvfile:
     for row in tqdm(reader):
         if int(row["population"]) > MIN_POPULATION and float(row["density"]) > MIN_DENSITY and float(row["density"]) < MAX_DENSITY:
             high_pop_cities.append({
-                "city_ascii": str(row["city_ascii"]),
+                "city": str(row["city_ascii"]),
                 "region_id": str(row["region_id"]),
                 "lat": float(row["lat"]),
                 "lng": float(row["lng"]),
@@ -39,10 +39,12 @@ with open('north-america-cities.csv', 'r') as csvfile:
 # Searches for streetview metadata for image within 100 meters on all sides
 
 
-def streetview_fuzzy_search(city_name, lat, lng):
+def streetview_fuzzy_search(city):
     # location must be within 50 meters of streetview image
     DEGREE_IN_METERS = 111139
     diff = 50/DEGREE_IN_METERS
+    lat = city["lat"]
+    lng = city["lng"]
     locations = [(lat-diff, lng+diff), (lat, lng+diff), (lat+diff, lng+diff),
                  (lat-diff, lng), (lat, lng), (lat+diff, lng),
                  (lat-diff, lng-diff), (lat, lng-diff), (lat+diff, lng-diff)]
@@ -54,27 +56,20 @@ def streetview_fuzzy_search(city_name, lat, lng):
         response = requests.get(signed_url, stream=True).json()
         # print("response: ", response)
         if response["status"] == "OK":
-            return {"city": city_name,
-                    "date": response["date"],
-                    "lat": response["location"]["lat"],
-                    "lng": response["location"]["lng"],
-                    "status": "OK"}
+            city["status"] = "OK"
+            return city
         elif response["status"] == "ZERO_RESULTS":
             continue
         else:
             raise Exception("Error: ", response["status"])
 
-    return {"city": city_name,
-            "date": None,
-            "lat": None,
-            "lng": None,
-            "status": "NOT_FOUND"}
+    city["status"] = "NOT_FOUND"
+    return city
 
 
 results = []
 for city in tqdm(high_pop_cities):
-    results.append(streetview_fuzzy_search(
-        city['city_ascii'], city['lat'], city['lng']))
+    results.append(streetview_fuzzy_search(city))
 
 # Convert results to a DataFrame and save to Excel
 
