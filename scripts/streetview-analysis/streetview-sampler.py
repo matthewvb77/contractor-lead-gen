@@ -34,7 +34,7 @@ with open('north-america-cities.csv', 'r') as csvfile:
 
 
 # TEST --- DELETE LATER
-high_pop_cities = high_pop_cities[:20]
+# high_pop_cities = high_pop_cities[:20]
 
 # Searches for streetview metadata for image within 100 meters on all sides
 
