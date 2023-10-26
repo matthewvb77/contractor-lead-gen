@@ -12,7 +12,7 @@ URL_SIGNING_SECRET = os.getenv('URL_SIGNING_SECRET')
 
 # People per km^2
 # Targetting suburban areas
-MAX_DENSITY = 5500
+MAX_DENSITY = 10000  # 5500
 MIN_DENSITY = 1000
 MIN_POPULATION = 20000
 
@@ -34,7 +34,7 @@ with open('north-america-cities.csv', 'r') as csvfile:
 
 
 # TEST --- DELETE LATER
-high_pop_cities = high_pop_cities[:1]
+high_pop_cities = high_pop_cities[:20]
 
 # Searches for streetview metadata for image within 100 meters on all sides
 
@@ -52,7 +52,7 @@ def streetview_fuzzy_search(lat, lng):
         signed_url = sign_url(unsigned_url, URL_SIGNING_SECRET)
 
         response = requests.get(signed_url, stream=True).json()
-        print("response: ", response)
+        # print("response: ", response)
         if response["status"] == "OK":
             return {"city": city['city_ascii'],
                     "date": response["date"],
@@ -72,7 +72,7 @@ def streetview_fuzzy_search(lat, lng):
 
 
 results = []
-for city in high_pop_cities:
+for city in tqdm(high_pop_cities):
     results.append(streetview_fuzzy_search(city['lat'], city['lng']))
 
 # Convert results to a DataFrame and save to Excel
