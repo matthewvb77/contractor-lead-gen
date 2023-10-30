@@ -34,12 +34,12 @@ with open('north-america-cities.csv', 'r') as csvfile:
 
 
 # TEST --- DELETE LATER
-# high_pop_cities = high_pop_cities[:5]
+high_pop_cities = high_pop_cities[:5]
 
 results = []
 for city in tqdm(high_pop_cities):
     radius = 200
-    unsigned_url = f"https://maps.googleapis.com/maps/api/streetview/metadata?radius={radius}&location={location[0]},{location[1]}&key={GOOGLE_MAPS_API_KEY}"
+    unsigned_url = f"https://maps.googleapis.com/maps/api/streetview/metadata?radius={radius}&location={city['lat']},{city['lng']}&key={GOOGLE_MAPS_API_KEY}"
     signed_url = sign_url(unsigned_url, URL_SIGNING_SECRET)
 
     response = requests.get(signed_url, stream=True).json()
