@@ -34,7 +34,7 @@ with open('north-america-cities.csv', 'r') as csvfile:
 
 
 # TEST --- DELETE LATER
-# high_pop_cities = high_pop_cities[:20]
+# high_pop_cities = high_pop_cities[:5]
 
 # Searches for streetview metadata for image within 100 meters on all sides
 
@@ -57,6 +57,7 @@ def streetview_fuzzy_search(city):
         # print("response: ", response)
         if response["status"] == "OK":
             city["status"] = "OK"
+            city["date"] = response["date"]
             return city
         elif response["status"] == "ZERO_RESULTS":
             continue
