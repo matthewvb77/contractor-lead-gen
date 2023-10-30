@@ -36,41 +36,23 @@ with open('north-america-cities.csv', 'r') as csvfile:
 # TEST --- DELETE LATER
 # high_pop_cities = high_pop_cities[:5]
 
-# Searches for streetview metadata for image within 100 meters on all sides
-
-
-def streetview_fuzzy_search(city):
-    # location must be within 50 meters of streetview image
-    DEGREE_IN_METERS = 111139
-    diff = 50/DEGREE_IN_METERS
-    lat = city["lat"]
-    lng = city["lng"]
-    locations = [(lat-diff, lng+diff), (lat, lng+diff), (lat+diff, lng+diff),
-                 (lat-diff, lng), (lat, lng), (lat+diff, lng),
-                 (lat-diff, lng-diff), (lat, lng-diff), (lat+diff, lng-diff)]
-
-    for location in locations:
-        unsigned_url = f"https://maps.googleapis.com/maps/api/streetview/metadata?location={location[0]},{location[1]}&key={GOOGLE_MAPS_API_KEY}"
-        signed_url = sign_url(unsigned_url, URL_SIGNING_SECRET)
-
-        response = requests.get(signed_url, stream=True).json()
-        # print("response: ", response)
-        if response["status"] == "OK":
-            city["status"] = "OK"
-            city["date"] = response["date"]
-            return city
-        elif response["status"] == "ZERO_RESULTS":
-            continue
-        else:
-            raise Exception("Error: ", response["status"])
-
-    city["status"] = "NOT_FOUND"
-    return city
-
-
 results = []
 for city in tqdm(high_pop_cities):
-    results.append(streetview_fuzzy_search(city))
+    radius = 200
+    unsigned_url = f"https://maps.googleapis.com/maps/api/streetview/metadata?radius={radius}&location={location[0]},{location[1]}&key={GOOGLE_MAPS_API_KEY}"
+    signed_url = sign_url(unsigned_url, URL_SIGNING_SECRET)
+
+    response = requests.get(signed_url, stream=True).json()
+
+    if response["status"] == "OK":
+        city["status"] = "OK"
+        city["date"] = response["date"]
+    elif response["status"] == "ZERO_RESULTS":
+        city["status"] = "NOT_FOUND"
+    else:
+        raise Exception("Error: ", response["status"])
+
+    results.append(city)
 
 # Convert results to a DataFrame and save to Excel
 
