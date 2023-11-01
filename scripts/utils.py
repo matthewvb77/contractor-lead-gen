@@ -67,7 +67,7 @@ def request_streetview(parameters, file_path):
 # Takes parameters and saves the streetview image to the specified file path.
 
 
-def request_metadata(parameters, file_path):
+def request_metadata(parameters):
 
     parameters["key"] = GOOGLE_MAPS_API_KEY
     p_string = '&'.join(
@@ -80,4 +80,4 @@ def request_metadata(parameters, file_path):
     if response.status_code == 200:
         return response.json()
     else:
-        print("Error fetching image:", response.status_code)
+        print("Error fetching data:", response.status_code, response.text)
