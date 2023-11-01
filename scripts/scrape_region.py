@@ -20,6 +20,7 @@ def scrape_region(lat_max, lat_min, lng_max, lng_min, meter_step):
     locations = []
 
     lat_values = np.arange(lat_min, lat_max, step)
+
     # Deal with crossing the international date line
     if lng_min < lng_max:
         lng_values = np.arange(lng_min, lng_max, step)
@@ -44,7 +45,8 @@ def scrape_region(lat_max, lat_min, lng_max, lng_min, meter_step):
                     pass
                 else:
                     raise Exception(
-                        "Error: ", response["status"], response["text"])
+                        f"Error: {response['status']} - {response.get('text', 'No error message provided')}")
+
             except Exception as e:
                 print(e)
 
