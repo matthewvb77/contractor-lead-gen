@@ -17,16 +17,30 @@ def scrape_region(lat_max, lat_min, lng_max, lng_min, meter_step):
             response = request_metadata(
                 parameters)
             locations.append(
-                ((response["location"]["lat"]), response["location"]["lng"]))
+                f"{response['location']['lat']},{response['location']['lng']}")
 
     locations = list(set(locations))
     # Request image for each location and save to file
     for location in locations:
-        parameters = {
-            "location": f"{location[0]},{location[1]}",
+        params = {
+            "location": location,
             "size": "640x400",
-            "fov": "120",
-            "pitch": "0",
+            "fov": 120,
+            "pitch": 0,
         }
+
+        params["heading"] = 0
         request_streetview(
-            parameters, f"../data/images/{location[0]}_{location[1]}.jpg")
+            params, f"../data/images/{location}_N.jpg")
+
+        params["heading"] = 90
+        request_streetview(
+            params, f"../data/images/{location}_E.jpg")
+
+        params["heading"] = 180
+        request_streetview(
+            params, f"../data/images/{location}_E.jpg")
+
+        params["heading"] = 270
+        request_streetview(
+            params, f"../data/images/{location}_E.jpg")
