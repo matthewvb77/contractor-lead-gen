@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 import csv
 from tqdm import tqdm
-from sign_url import sign_url
+from utils import sign_url
 
 load_dotenv()
 GOOGLE_MAPS_API_KEY = os.getenv('GOOGLE_MAPS_API_KEY')
@@ -16,7 +16,7 @@ MAX_DENSITY = 10000  # 5500
 MIN_DENSITY = 1000
 MIN_POPULATION = 20000
 
-with open('north-america-cities.csv', 'r') as csvfile:
+with open('../data/north-america-cities.csv', 'r') as csvfile:
     reader = csv.DictReader(csvfile)
     high_pop_cities = []
 
@@ -34,7 +34,7 @@ with open('north-america-cities.csv', 'r') as csvfile:
 
 
 # TEST --- DELETE LATER
-high_pop_cities = high_pop_cities[:5]
+# high_pop_cities = high_pop_cities[:5]
 
 results = []
 for city in tqdm(high_pop_cities):
@@ -57,4 +57,4 @@ for city in tqdm(high_pop_cities):
 # Convert results to a DataFrame and save to Excel
 
 df = pd.DataFrame(results)
-df.to_excel('cities_streetview.xlsx', index=False)
+df.to_excel('../data/cities_streetview.xlsx', index=False)
