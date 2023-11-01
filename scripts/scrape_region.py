@@ -31,16 +31,16 @@ def scrape_region(lat_max, lat_min, lng_max, lng_min, meter_step):
 
         params["heading"] = 0
         request_streetview(
-            params, f"../data/images/{location}_N.jpg")
+            params, f"../images/{location}_N.jpg")
 
         params["heading"] = 90
         request_streetview(
-            params, f"../data/images/{location}_E.jpg")
+            params, f"../images/{location}_E.jpg")
 
         params["heading"] = 180
         request_streetview(
-            params, f"../data/images/{location}_E.jpg")
+            params, f"../images/{location}_E.jpg")
 
         params["heading"] = 270
         request_streetview(
-            params, f"../data/images/{location}_E.jpg")
+            params, f"../images/{location}_E.jpg")
