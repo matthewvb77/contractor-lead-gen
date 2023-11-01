@@ -1,6 +1,7 @@
 from utils import meters_to_degrees
 from utils import request_metadata
 from utils import request_streetview
+import numpy as np
 
 
 def scrape_region(lat_max, lat_min, lng_max, lng_min, meter_step):
@@ -17,15 +18,25 @@ def scrape_region(lat_max, lat_min, lng_max, lng_min, meter_step):
 
     # Scan metadata for each location and record points with streetview
     locations = []
-    for lat in range(lat_min, lat_max, step):
-        for lng in range(lng_min, lng_max, step):
+    for lat in np.arange(lat_min, lat_max, step):
+        for lng in np.arange(lng_min, lng_max, step):
             params = {
                 "location": f"{lat},{lng}",
             }
-            response = request_metadata(
-                params)
-            locations.append(
-                f"{response['location']['lat']},{response['location']['lng']}")
+            try:
+                response = request_metadata(
+                    params)
+                if response["status"] == "OK":
+                    locations.append(
+                        f"{response['location']['lat']},{response['location']['lng']}")
+
+                elif response["status"] == "ZERO_RESULTS":
+                    pass
+                else:
+                    raise Exception(
+                        "Error: ", response["status"], response["text"])
+            except Exception as e:
+                print(e)
 
     locations = list(set(locations))
     # Request image for each location and save to file
@@ -37,18 +48,11 @@ def scrape_region(lat_max, lat_min, lng_max, lng_min, meter_step):
             "pitch": 0,
         }
 
-        params["heading"] = 0
-        request_streetview(
-            params, f"../images/{location}_N.jpg")
+        for heading, direction in zip([0, 90, 180, 270], ["N", "E", "S", "W"]):
+            params["heading"] = heading
+            file_path = f"../images/{location}_{direction}.jpg"
 
-        params["heading"] = 90
-        request_streetview(
-            params, f"../images/{location}_E.jpg")
-
-        params["heading"] = 180
-        request_streetview(
-            params, f"../images/{location}_S.jpg")
-
-        params["heading"] = 270
-        request_streetview(
-            params, f"../images/{location}_W.jpg")
+            try:
+                request_streetview(params, file_path)
+            except Exception as e:
+                print(e)
