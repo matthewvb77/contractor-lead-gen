@@ -63,3 +63,21 @@ def request_streetview(parameters, file_path):
             f"Image saved as {file_path} with size {size_in_kilobytes:.2f} KB")
     else:
         print("Error fetching image:", response.status_code)
+
+# Takes parameters and saves the streetview image to the specified file path.
+
+
+def request_metadata(parameters, file_path):
+
+    parameters["key"] = GOOGLE_MAPS_API_KEY
+    p_string = '&'.join(
+        [f"{key}={value}" for key, value in parameters.items()])
+
+    unsigned_url = f"https://maps.googleapis.com/maps/api/streetview/metadata?{p_string}"
+    signed_url = sign_url(unsigned_url, URL_SIGNING_SECRET)
+
+    response = requests.get(signed_url, stream=True)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print("Error fetching image:", response.status_code)
