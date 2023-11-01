@@ -10,12 +10,11 @@ def scrape_region(lat_max, lat_min, lng_max, lng_min, meter_step):
     locations = []
     for lat in range(lat_min, lat_max, step):
         for lng in range(lng_min, lng_max, step):
-            parameters = {
+            params = {
                 "location": f"{lat},{lng}",
-                "radius": meter_step*1.5
             }
             response = request_metadata(
-                parameters)
+                params)
             locations.append(
                 f"{response['location']['lat']},{response['location']['lng']}")
 
