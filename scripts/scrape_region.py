@@ -18,8 +18,18 @@ def scrape_region(lat_max, lat_min, lng_max, lng_min, meter_step):
 
     # Scan metadata for each location and record points with streetview
     locations = []
-    for lat in np.arange(lat_min, lat_max, step):
-        for lng in np.arange(lng_min, lng_max, step):
+
+    lat_values = np.arange(lat_min, lat_max, step)
+    # Deal with crossing the international date line
+    if lng_min < lng_max:
+        lng_values = np.arange(lng_min, lng_max, step)
+    else:
+        lng_values_1 = np.arange(lng_min, 180, step)
+        lng_values_2 = np.arange(-180, lng_max, step)
+        lng_values = np.concatenate([lng_values_1, lng_values_2])
+
+    for lat in lat_values:
+        for lng in lng_values:
             params = {
                 "location": f"{lat},{lng}",
             }
