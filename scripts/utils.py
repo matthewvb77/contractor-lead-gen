@@ -4,6 +4,11 @@ import hashlib
 import hmac
 import base64
 import urllib.parse as urlparse
+from dotenv import load_dotenv
+
+load_dotenv()
+URL_SIGNING_SECRET = os.getenv('URL_SIGNING_SECRET')
+GOOGLE_MAPS_API_KEY = os.getenv('GOOGLE_MAPS_API_KEY')
 
 
 def meters_to_degrees(meters):
@@ -37,13 +42,14 @@ def sign_url(input_url=None, secret=None):
 
 
 # Takes parameters and saves the streetview image to the specified file path.
-def request_streetview(parameters, file_path, url_signing_secret):
+def request_streetview(parameters, file_path):
 
+    parameters["key"] = GOOGLE_MAPS_API_KEY
     p_string = '&'.join(
         [f"{key}={value}" for key, value in parameters.items()])
 
     unsigned_url = f"https://maps.googleapis.com/maps/api/streetview?{p_string}"
-    signed_url = sign_url(unsigned_url, url_signing_secret)
+    signed_url = sign_url(unsigned_url, URL_SIGNING_SECRET)
 
     response = requests.get(signed_url, stream=True)
     if response.status_code == 200:
