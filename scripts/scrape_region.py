@@ -17,18 +17,20 @@ def scrape_region(lat_min, lat_max, lng_min, lng_max, meter_step):
     assert lng_max > -180 and lng_max < 180
     assert lng_min > -180 and lng_min < 180
 
+    logging.basicConfig(filename=log_path, level=logging.INFO,
+                        format='%(asctime)s - %(levelname)s - %(message)s')
+
     # Create folder and logs for script results
     run_id = uuid.uuid4()
     folder_path = os.path.join('..', 'data', f'region_scrape_{run_id}')
     if not os.path.exists(folder_path):
         os.mkdir(folder_path)
     else:
+        logging.error(f"Folder already exists: {folder_path}")
         raise Exception("Folder already exists")
 
     # Configure logging
     log_path = f'{folder_path}/log.txt'
-    logging.basicConfig(filename=log_path, level=logging.INFO,
-                        format='%(asctime)s - %(levelname)s - %(message)s')
 
     logging.info('Scrape_Region Log File')
     logging.info('PARAMETERS:')
