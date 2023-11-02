@@ -1,6 +1,9 @@
 import unittest
 import os
 from scripts.utils import meters_to_degrees, sign_url, request_streetview, request_metadata
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 class TestUtilities(unittest.TestCase):
@@ -26,8 +29,14 @@ class TestUtilities(unittest.TestCase):
             result, 1, msg="Conversion from meters to degrees is incorrect")
 
     def test_sign_url(self):
-        secret = "YOUR_SECRET"
-        url = "http://example.com/path?param=value"
+        secret = os.getenv("URL_SIGNING_SECRET")
+        key = os.getenv("GOOGLE_MAPS_API_KEY")
+        parameters = {"location": "48.486132,-123.325421",
+                      "key": key,
+                      }
+        p_string = '&'.join(
+            [f"{key}={value}" for key, value in parameters.items()])
+        url = f"https://maps.googleapis.com/maps/api/streetview/metadata?{p_string}"
         signed_url = sign_url(url, secret)
         self.assertIn("&signature=", signed_url,
                       msg="URL was not signed correctly")
