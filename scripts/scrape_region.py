@@ -18,21 +18,24 @@ def scrape_region(lat_max, lat_min, lng_max, lng_min, meter_step):
     assert lng_min > -180 and lng_min < 180
 
     # Create folder and logs for script results
-    try:
-        run_id = uuid.uuid4()
-        folder_path = f'../data/region_scrape_{run_id}'
-        if not os.path.exists(folder_path):
-            os.mkdir(folder_path)
-        else:
-            raise Exception("Folder already exists")
+    run_id = uuid.uuid4()
+    folder_path = f'../data/region_scrape_{run_id}'
+    if not os.path.exists(folder_path):
+        os.mkdir(folder_path)
+    else:
+        raise Exception("Folder already exists")
 
-        log_path = f'{folder_path}/log.txt'
-        with open(log_path, 'w') as log_file:
-            log_file.write(
-                f'Scrape_Region Log File\n\nPARAMETERS: \nlat_range: ({lat_min}, {lat_max})\nlng_range: ({lng_min}, {lng_max})\nmeter_step: {meter_step}\n\n')
+    # Configure logging
+    log_path = f'{folder_path}/log.txt'
+    logging.basicConfig(filename=log_path, level=logging.INFO,
+                        format='%(asctime)s - %(levelname)s - %(message)s')
 
-    except Exception as e:
-        print("Error while creating folder and logs: ", e)
+    logging.info('Scrape_Region Log File')
+    logging.info('PARAMETERS:')
+    logging.info(f'lat_range: ({lat_min}, {lat_max})')
+    logging.info(f'lng_range: ({lng_min}, {lng_max})')
+    logging.info(f'meter_step: {meter_step}')
+    logging.info('\n' + '=' * 50 + '\n')
 
     step = meters_to_degrees(meter_step)
 
