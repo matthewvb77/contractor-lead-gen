@@ -2,6 +2,8 @@ from utils import meters_to_degrees
 from utils import request_metadata
 from utils import request_streetview
 import numpy as np
+import os
+import uuid
 
 
 def scrape_region(lat_max, lat_min, lng_max, lng_min, meter_step):
@@ -14,9 +16,21 @@ def scrape_region(lat_max, lat_min, lng_max, lng_min, meter_step):
     assert lng_max > -180 and lng_max < 180
     assert lng_min > -180 and lng_min < 180
 
+    # Create folder and logs for script results
+    try:
+        run_id = uuid.uuid4()
+        folder_path = f'../data/region_scrape_{run_id}'
+        if not os.path.exists(folder_path):
+            os.mkdir(folder_path)
+        else:
+            raise Exception("Folder already exists")
+
+    except Exception as e:
+        print("Error while creating folder and logs: ", e)
+
     step = meters_to_degrees(meter_step)
 
-    # List of dictionaries. Each dictionary contains a location, date, and status of a location with an image.
+    # List of dictionaries. {"location": str, "date": str, "status": str}
     valid_locations = []
 
     lat_values = np.arange(lat_min, lat_max, step)
@@ -61,7 +75,7 @@ def scrape_region(lat_max, lat_min, lng_max, lng_min, meter_step):
     # Request image for each location and save to file
     for location in valid_locations:
         params = {
-            "location": location,
+            "location": location["location"],
             "size": "640x400",
             "fov": 120,
             "pitch": 0,
