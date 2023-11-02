@@ -4,6 +4,7 @@ from utils import request_streetview
 import numpy as np
 import os
 import uuid
+import logging
 
 
 def scrape_region(lat_max, lat_min, lng_max, lng_min, meter_step):
@@ -24,6 +25,11 @@ def scrape_region(lat_max, lat_min, lng_max, lng_min, meter_step):
             os.mkdir(folder_path)
         else:
             raise Exception("Folder already exists")
+
+        log_path = f'{folder_path}/log.txt'
+        with open(log_path, 'w') as log_file:
+            log_file.write(
+                f'Scrape_Region Log File\n\nPARAMETERS: \nlat_range: ({lat_min}, {lat_max})\nlng_range: ({lng_min}, {lng_max})\nmeter_step: {meter_step}\n\n')
 
     except Exception as e:
         print("Error while creating folder and logs: ", e)
