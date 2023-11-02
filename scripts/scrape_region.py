@@ -81,6 +81,9 @@ def scrape_region(lat_max, lat_min, lng_max, lng_min, meter_step):
     valid_locations = [x for x in valid_locations if x['location']
                        not in seen and not seen.add(x['location'])]
 
+    logging.info("RESULT SUMMARY:")
+    logging.info("Total locations: " + str(len(valid_locations)))
+
     # Request image for each location and save to file
     for location in valid_locations:
         params = {
