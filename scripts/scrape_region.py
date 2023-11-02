@@ -19,7 +19,7 @@ def scrape_region(lat_max, lat_min, lng_max, lng_min, meter_step):
 
     # Create folder and logs for script results
     run_id = uuid.uuid4()
-    folder_path = f'../data/region_scrape_{run_id}'
+    folder_path = f'../images/region_scrape_{run_id}'
     if not os.path.exists(folder_path):
         os.mkdir(folder_path)
     else:
@@ -95,7 +95,7 @@ def scrape_region(lat_max, lat_min, lng_max, lng_min, meter_step):
 
         for heading, direction in zip([0, 90, 180, 270], ["N", "E", "S", "W"]):
             params["heading"] = heading
-            file_path = f"../images/{location}_{direction}.jpg"
+            file_path = f"{folder_path}/{location}_{direction}.jpg"
 
             try:
                 request_streetview(params, file_path)
