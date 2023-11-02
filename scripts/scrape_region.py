@@ -7,7 +7,7 @@ import uuid
 import logging
 
 
-def scrape_region(lat_max, lat_min, lng_max, lng_min, meter_step):
+def scrape_region(lat_min, lat_max, lng_min, lng_max, meter_step):
     # Data validation
     assert lat_max > lat_min
     # assert lng_max > lng_min ---> NOT TRUE FOR CROSSING THE INTERNATIONAL DATE LINE
@@ -19,7 +19,7 @@ def scrape_region(lat_max, lat_min, lng_max, lng_min, meter_step):
 
     # Create folder and logs for script results
     run_id = uuid.uuid4()
-    folder_path = f'../images/region_scrape_{run_id}'
+    folder_path = f'../data/region_scrape_{run_id}'
     if not os.path.exists(folder_path):
         os.mkdir(folder_path)
     else:
@@ -74,7 +74,8 @@ def scrape_region(lat_max, lat_min, lng_max, lng_min, meter_step):
                         f"Error: {response['status']} - {response.get('text', 'No error message provided')}")
 
             except Exception as e:
-                print(e)
+                logging.error(
+                    f"Error while requesting metadata on location {lat}, {lng}: {e}")
 
     # Remove duplicates
     seen = set()
@@ -100,4 +101,5 @@ def scrape_region(lat_max, lat_min, lng_max, lng_min, meter_step):
             try:
                 request_streetview(params, file_path)
             except Exception as e:
-                print(e)
+                logging.error(
+                    f"Error while requesting image with location: {location}: {e}")
