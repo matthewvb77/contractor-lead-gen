@@ -16,8 +16,8 @@ def scrape_region(lat_max, lat_min, lng_max, lng_min, meter_step):
 
     step = meters_to_degrees(meter_step)
 
-    # Scan metadata for each location and record points with streetview
-    locations = []
+    # List of dictionaries. Each dictionary contains a location, date, and status of a location with an image.
+    valid_locations = []
 
     lat_values = np.arange(lat_min, lat_max, step)
 
@@ -38,8 +38,11 @@ def scrape_region(lat_max, lat_min, lng_max, lng_min, meter_step):
                 response = request_metadata(
                     params)
                 if response["status"] == "OK":
-                    locations.append(
-                        f"{response['location']['lat']},{response['location']['lng']}")
+                    location_string = f"{response['location']['lat']},{response['location']['lng']}"
+                    valid_locations.append(
+                        {"location": location_string,
+                         "date": response["date"],
+                         "status": response["status"]})
 
                 elif response["status"] == "ZERO_RESULTS":
                     pass
@@ -50,9 +53,13 @@ def scrape_region(lat_max, lat_min, lng_max, lng_min, meter_step):
             except Exception as e:
                 print(e)
 
-    locations = list(set(locations))
+    # Remove duplicates
+    seen = set()
+    valid_locations = [x for x in valid_locations if x['location']
+                       not in seen and not seen.add(x['location'])]
+
     # Request image for each location and save to file
-    for location in locations:
+    for location in valid_locations:
         params = {
             "location": location,
             "size": "640x400",
