@@ -1,6 +1,6 @@
 import unittest
 import os
-from ..utils import meters_to_degrees, sign_url, request_streetview, request_metadata
+from scripts.utils import meters_to_degrees, sign_url, request_streetview, request_metadata
 
 
 class TestUtilities(unittest.TestCase):
