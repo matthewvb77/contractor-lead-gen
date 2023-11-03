@@ -5,6 +5,7 @@ import numpy as np
 import os
 import uuid
 import logging
+from tqdm import tqdm
 
 
 def scrape_region(lat_min, lat_max, lng_min, lng_max, meter_step):
@@ -54,6 +55,8 @@ def scrape_region(lat_min, lat_max, lng_min, lng_max, meter_step):
         lng_values_2 = np.arange(-180, lng_max, step)
         lng_values = np.concatenate([lng_values_1, lng_values_2])
 
+    pbar = tqdm(total=len(lat_values) * len(lng_values),
+                desc="Requesting metadata")
     for lat in lat_values:
         for lng in lng_values:
             params = {
@@ -75,9 +78,12 @@ def scrape_region(lat_min, lat_max, lng_min, lng_max, meter_step):
                     raise Exception(
                         f"Error: {response['status']} - {response.get('text', 'No error message provided')}")
 
+                pbar.update(1)
+
             except Exception as e:
                 logging.error(
                     f"Error while requesting metadata on location {lat}, {lng}: {e}")
+    pbar.close()
 
     # Remove duplicates
     seen = set()
@@ -88,7 +94,7 @@ def scrape_region(lat_min, lat_max, lng_min, lng_max, meter_step):
     logging.info("Total locations: " + str(len(valid_locations)))
 
     # Request image for each location and save to file
-    for location in valid_locations:
+    for location in tqdm(valid_locations, desc="Requesting images"):
         params = {
             "location": location["location"],
             "size": "640x400",
