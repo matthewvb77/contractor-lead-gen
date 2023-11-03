@@ -40,19 +40,19 @@ def scrape_region(lat_min, lat_max, lng_min, lng_max, meter_step):
     logging.info(f'meter_step: {meter_step}')
     logging.info('\n' + '=' * 50 + '\n')
 
-    step = meters_to_degrees(meter_step)
+    degree_step = meters_to_degrees(meter_step)
 
     # List of dictionaries. {"location": str, "date": str, "status": str}
     valid_locations = []
 
-    lat_values = np.arange(lat_min, lat_max, step)
+    lat_values = np.arange(lat_min, lat_max, degree_step)
 
     # Deal with crossing the international date line
     if lng_min < lng_max:
-        lng_values = np.arange(lng_min, lng_max, step)
+        lng_values = np.arange(lng_min, lng_max, degree_step)
     else:
-        lng_values_1 = np.arange(lng_min, 180, step)
-        lng_values_2 = np.arange(-180, lng_max, step)
+        lng_values_1 = np.arange(lng_min, 180, degree_step)
+        lng_values_2 = np.arange(-180, lng_max, degree_step)
         lng_values = np.concatenate([lng_values_1, lng_values_2])
 
     pbar = tqdm(total=len(lat_values) * len(lng_values),
