@@ -1,12 +1,10 @@
 # mv-effect
 
-Includes all code related to mv effect and it's operation.
-
-### Developer Notes
+## Developer Notes
 
 To test: `pytest`
 
-### Script Docs
+## Script Docs
 
 **streetview-sampler.py** - hits metadata endpoint once for each city in NA above 20k population. Saves results to cities\*streetview.xlsx.
 
