@@ -23,7 +23,7 @@ def scrape_region(lat_min, lat_max, lng_min, lng_max, meter_step, min_date):
 
     # Create folder and logs for script results
     run_id = uuid.uuid4()
-    folder_path = os.path.join('..', 'data', f'region_scrape_{run_id}')
+    folder_path = os.path.join('..', 'data', f'scrape_region_{run_id}')
     if not os.path.exists(folder_path):
         os.mkdir(folder_path)
     else:
