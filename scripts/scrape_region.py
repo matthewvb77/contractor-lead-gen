@@ -8,7 +8,7 @@ import logging
 from tqdm import tqdm
 
 
-def scrape_region(lat_min, lat_max, lng_min, lng_max, meter_step, min_date):
+def scrape_region(lat_min, lat_max, lng_min, lng_max, meter_step, min_date, city_name):
     # Data validation
     assert lat_max > lat_min
     # assert lng_max > lng_min ---> NOT TRUE FOR CROSSING THE INTERNATIONAL DATE LINE
@@ -23,7 +23,8 @@ def scrape_region(lat_min, lat_max, lng_min, lng_max, meter_step, min_date):
 
     # Create folder and logs for script results
     run_id = uuid.uuid4()
-    folder_path = os.path.join('..', 'data', f'scrape_region_{run_id}')
+    folder_path = os.path.join(
+        '..', 'data', f'{city_name}', f'scrape_region_{run_id}')
     if not os.path.exists(folder_path):
         os.mkdir(folder_path)
     else:
