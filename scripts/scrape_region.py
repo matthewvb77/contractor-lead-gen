@@ -8,7 +8,7 @@ import logging
 from tqdm import tqdm
 
 
-def scrape_region(lat_min, lat_max, lng_min, lng_max, meter_step):
+def scrape_region(lat_min, lat_max, lng_min, lng_max, meter_step, min_date):
     # Data validation
     assert lat_max > lat_min
     # assert lng_max > lng_min ---> NOT TRUE FOR CROSSING THE INTERNATIONAL DATE LINE
@@ -65,7 +65,7 @@ def scrape_region(lat_min, lat_max, lng_min, lng_max, meter_step):
             try:
                 response = request_metadata(
                     params)
-                if response["status"] == "OK":
+                if response["status"] == "OK" and response["date"] >= min_date:
                     location_string = f"{response['location']['lat']},{response['location']['lng']}"
                     valid_locations.append(
                         {"location": location_string,
