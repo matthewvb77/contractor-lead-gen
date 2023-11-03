@@ -1,5 +1,7 @@
 # mv-effect
 
+#### Note: THIS PROJECT IS AGAINST GOOGLE'S TOS. DELAYED INDEFINITELY.
+
 ## Developer Notes
 
 To test: `pytest`
